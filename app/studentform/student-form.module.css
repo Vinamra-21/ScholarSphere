@@ -1,0 +1,36 @@
+.formContainer {
+    margin: 50px;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 400px;
+  }
+  
+  .formLabel {
+    font-weight: bold;
+  }
+  
+  .formInput,
+  .formTextarea {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .formButton {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #0070f3;
+    color: white;
+    cursor: pointer;
+}
+
+.formButton:hover {
+  background-color: #005bb5;
+}  
