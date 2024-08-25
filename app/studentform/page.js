@@ -5,7 +5,6 @@ import Web3 from 'web3';
 import styles from './student-form.module.css';
 import contractABI from '../PersonalRecordsABI.json'; // Adjust path to your ABI file
 
-// Initialize Web3 and contract when MetaMask is available
 const getWeb3AndContract = async () => {
   if (window.ethereum) {
     const web3 = new Web3(window.ethereum);
@@ -28,11 +27,12 @@ export default function StudentForm() {
     qualification: ['', '', '', '', ''],
     currentPosition: '',
     currentAddress: '',
-    photo: '', // URL for the photo
+    photo: '', // URL or base64 string for the photo
   });
 
   const [degreeDetails, setDegreeDetails] = useState({
     degreeName: '',
+    degreeNumber: '', // New field
     degreeScan: '', // New field
     issuer: '',     // New field
     verified: ''    // New field
@@ -49,6 +49,7 @@ export default function StudentForm() {
   const [web3, setWeb3] = useState(null);
   const [contract, setContract] = useState(null);
   const [account, setAccount] = useState('');
+  const [studentID, setStudentID] = useState('');
 
   useEffect(() => {
     const init = async () => {
@@ -98,26 +99,6 @@ export default function StudentForm() {
     });
   };
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const photoUrl = await uploadPhoto(file); // Replace with your upload function
-      setPersonalDetails({
-        ...personalDetails,
-        photo: photoUrl, // Store the URL
-      });
-    }
-  };
-
-  const uploadPhoto = async (file) => {
-    // Example upload logic
-    const formData = new FormData();
-    formData.append('file', file);
-    const response = await fetch('/upload', { method: 'POST', body: formData });
-    const data = await response.json();
-    return data.url; // URL returned from your server or cloud storage
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -140,6 +121,7 @@ export default function StudentForm() {
           personalDetails.currentAddress,
           personalDetails.photo,
           degreeDetails.degreeName,
+          degreeDetails.degreeNumber, // Added field
           degreeDetails.degreeScan,
           degreeDetails.issuer,
           degreeDetails.verified,
@@ -153,6 +135,10 @@ export default function StudentForm() {
 
       const receipt = await web3.eth.sendTransaction(tx);
 
+      // Assuming `setPersonalDetails` emits an event with the user ID
+      const userId = await contract.methods.userIdMapping(account).call();
+      setStudentID(userId);
+      
       console.log('Transaction hash:', receipt.transactionHash);
     } catch (error) {
       console.error('Error sending transaction:', error);
@@ -271,18 +257,20 @@ export default function StudentForm() {
               />
             </div>
             <div>
-              <label htmlFor="photo" className={styles.formLabel}>Photo URL:</label>
+              <label htmlFor="photo" className={styles.formLabel}>Photo URL or Base64:</label>
               <input
                 type="text"
                 id="photo"
                 name="photo"
                 value={personalDetails.photo}
                 onChange={handlePersonalDetailsChange}
-                placeholder="Enter photo URL"
+                placeholder="Enter photo URL or Base64 string"
                 className={styles.formInput}
               />
             </div>
-            <button type="button" onClick={nextStep} className={styles.formButton}>Next</button>
+            <div>
+              <button type="button" onClick={nextStep} className={styles.formButton}>Next</button>
+            </div>
           </>
         )}
 
@@ -290,6 +278,7 @@ export default function StudentForm() {
         {step === 2 && (
           <>
             <h2>Degree Details</h2>
+            {/* Degree Details Form Fields */}
             <div>
               <label htmlFor="degreeName" className={styles.formLabel}>Degree Name:</label>
               <input
@@ -303,6 +292,18 @@ export default function StudentForm() {
               />
             </div>
             <div>
+              <label htmlFor="degreeNumber" className={styles.formLabel}>Degree Number:</label>
+              <input
+                type="text"
+                id="degreeNumber"
+                name="degreeNumber"
+                value={degreeDetails.degreeNumber}
+                onChange={handleDegreeDetailsChange}
+                required
+                className={styles.formInput}
+              />
+            </div>
+            <div>
               <label htmlFor="degreeScan" className={styles.formLabel}>Degree Scan URL:</label>
               <input
                 type="text"
@@ -310,6 +311,7 @@ export default function StudentForm() {
                 name="degreeScan"
                 value={degreeDetails.degreeScan}
                 onChange={handleDegreeDetailsChange}
+                required
                 className={styles.formInput}
               />
             </div>
@@ -321,6 +323,7 @@ export default function StudentForm() {
                 name="issuer"
                 value={degreeDetails.issuer}
                 onChange={handleDegreeDetailsChange}
+                required
                 className={styles.formInput}
               />
             </div>
@@ -332,11 +335,14 @@ export default function StudentForm() {
                 name="verified"
                 value={degreeDetails.verified}
                 onChange={handleDegreeDetailsChange}
+                required
                 className={styles.formInput}
               />
             </div>
-            <button type="button" onClick={previousStep} className={styles.formButton}>Previous</button>
-            <button type="button" onClick={nextStep} className={styles.formButton}>Next</button>
+            <div>
+              <button type="button" onClick={previousStep} className={styles.formButton}>Back</button>
+              <button type="button" onClick={nextStep} className={styles.formButton}>Next</button>
+            </div>
           </>
         )}
 
@@ -344,6 +350,7 @@ export default function StudentForm() {
         {step === 3 && (
           <>
             <h2>ID Card Details</h2>
+            {/* ID Card Details Form Fields */}
             <div>
               <label htmlFor="idCardNumber" className={styles.formLabel}>ID Card Number:</label>
               <input
@@ -364,6 +371,7 @@ export default function StudentForm() {
                 name="idCardScan"
                 value={idCardDetails.idCardScan}
                 onChange={handleIdCardDetailsChange}
+                required
                 className={styles.formInput}
               />
             </div>
@@ -375,6 +383,7 @@ export default function StudentForm() {
                 name="validity"
                 value={idCardDetails.validity}
                 onChange={handleIdCardDetailsChange}
+                required
                 className={styles.formInput}
               />
             </div>
@@ -386,6 +395,7 @@ export default function StudentForm() {
                 name="issuer"
                 value={idCardDetails.issuer}
                 onChange={handleIdCardDetailsChange}
+                required
                 className={styles.formInput}
               />
             </div>
@@ -397,14 +407,25 @@ export default function StudentForm() {
                 name="verified"
                 value={idCardDetails.verified}
                 onChange={handleIdCardDetailsChange}
+                required
                 className={styles.formInput}
               />
             </div>
-            <button type="button" onClick={previousStep} className={styles.formButton}>Previous</button>
-            <button type="submit" className={styles.formButton}>Submit</button>
+            <div>
+              <button type="button" onClick={previousStep} className={styles.formButton}>Back</button>
+              <button type="submit" className={styles.formButton}>Submit</button>
+            </div>
           </>
         )}
       </form>
+
+      {/* Display the Unique Student ID */}
+      {studentID && (
+        <div className={styles.studentId}>
+          <h3>Your Unique Student ID:</h3>
+          <p>{studentID}</p>
+        </div>
+      )}
     </div>
   );
 }
