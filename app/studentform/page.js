@@ -8,7 +8,7 @@ import contractABI from '../PersonalRecordsABI.json'; // Adjust path to your ABI
 const getWeb3AndContract = async () => {
   if (window.ethereum) {
     const web3 = new Web3(window.ethereum);
-    const contractAddress = '0xc95b3467BB972584518473F32DF6682917c85564'; // Replace with your contract's address
+    const contractAddress = '0xaE036c65C649172b43ef7156b009c6221B596B8b'; // Replace with your contract's address
     const contract = new web3.eth.Contract(contractABI, contractAddress);
     return { web3, contract };
   } else {
@@ -60,43 +60,21 @@ export default function StudentForm() {
         const accounts = await web3.eth.requestAccounts();
         setAccount(accounts[0]);
       } catch (error) {
-        console.error('Error initializing web3:', error);
+        console.error('Error initializing web3:', error.message);
       }
     };
     init();
   }, []);
 
-  const handlePersonalDetailsChange = (e) => {
+  const handleInputChange = (e, stateSetter, state) => {
     const { name, value } = e.target;
-    setPersonalDetails({
-      ...personalDetails,
-      [name]: value,
-    });
+    stateSetter({ ...state, [name]: value });
   };
 
   const handleQualificationChange = (index, value) => {
     const updatedQualifications = [...personalDetails.qualification];
     updatedQualifications[index] = value;
-    setPersonalDetails({
-      ...personalDetails,
-      qualification: updatedQualifications,
-    });
-  };
-
-  const handleDegreeDetailsChange = (e) => {
-    const { name, value } = e.target;
-    setDegreeDetails({
-      ...degreeDetails,
-      [name]: value,
-    });
-  };
-
-  const handleIdCardDetailsChange = (e) => {
-    const { name, value } = e.target;
-    setIdCardDetails({
-      ...idCardDetails,
-      [name]: value,
-    });
+    setPersonalDetails({ ...personalDetails, qualification: updatedQualifications });
   };
 
   const handleSubmit = async (e) => {
@@ -106,6 +84,7 @@ export default function StudentForm() {
         throw new Error('Web3 or contract is not initialized');
       }
 
+      // Send transaction to set personal details
       const tx = {
         from: account,
         to: contract.options.address,
@@ -121,7 +100,7 @@ export default function StudentForm() {
           personalDetails.currentAddress,
           personalDetails.photo,
           degreeDetails.degreeName,
-          degreeDetails.degreeNumber, // Added field
+          degreeDetails.degreeNumber,
           degreeDetails.degreeScan,
           degreeDetails.issuer,
           degreeDetails.verified,
@@ -135,13 +114,15 @@ export default function StudentForm() {
 
       const receipt = await web3.eth.sendTransaction(tx);
 
-      // Assuming `setPersonalDetails` emits an event with the user ID
-      const userId = await contract.methods.userIdMapping(account).call();
-      setStudentID(userId);
-      
-      console.log('Transaction hash:', receipt.transactionHash);
+      if (receipt.status) {
+        // Fetch user ID from the contract
+        const userId = await contract.methods.getUserId().call();
+        setStudentID(userId); // Set the user ID to state
+      } else {
+        console.error('Transaction failed');
+      }
     } catch (error) {
-      console.error('Error sending transaction:', error);
+      console.error('Error sending transaction:', error.message);
     }
   };
 
@@ -161,66 +142,20 @@ export default function StudentForm() {
           <>
             <h2>Personal Details</h2>
             {/* Personal Details Form Fields */}
-            <div>
-              <label htmlFor="name" className={styles.formLabel}>Name:</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={personalDetails.name}
-                onChange={handlePersonalDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <label htmlFor="age" className={styles.formLabel}>Age:</label>
-              <input
-                type="number"
-                id="age"
-                name="age"
-                value={personalDetails.age}
-                onChange={handlePersonalDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <label htmlFor="aadharNumber" className={styles.formLabel}>Aadhar Number:</label>
-              <input
-                type="text"
-                id="aadharNumber"
-                name="aadharNumber"
-                value={personalDetails.aadharNumber}
-                onChange={handlePersonalDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <label htmlFor="fatherName" className={styles.formLabel}>Father's Name:</label>
-              <input
-                type="text"
-                id="fatherName"
-                name="fatherName"
-                value={personalDetails.fatherName}
-                onChange={handlePersonalDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <label htmlFor="motherName" className={styles.formLabel}>Mother's Name:</label>
-              <input
-                type="text"
-                id="motherName"
-                name="motherName"
-                value={personalDetails.motherName}
-                onChange={handlePersonalDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
+            {['name', 'age', 'aadharNumber', 'fatherName', 'motherName', 'currentPosition'].map((field) => (
+              <div key={field}>
+                <label htmlFor={field} className={styles.formLabel}>{field.replace(/([A-Z])/g, ' $1').toUpperCase()}:</label>
+                <input
+                  type={field === 'age' ? 'number' : 'text'}
+                  id={field}
+                  name={field}
+                  value={personalDetails[field]}
+                  onChange={(e) => handleInputChange(e, setPersonalDetails, personalDetails)}
+                  required
+                  className={styles.formInput}
+                />
+              </div>
+            ))}
             <div>
               <label className={styles.formLabel}>Qualifications:</label>
               {personalDetails.qualification.map((q, index) => (
@@ -234,24 +169,12 @@ export default function StudentForm() {
               ))}
             </div>
             <div>
-              <label htmlFor="currentPosition" className={styles.formLabel}>Current Position:</label>
-              <input
-                type="text"
-                id="currentPosition"
-                name="currentPosition"
-                value={personalDetails.currentPosition}
-                onChange={handlePersonalDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
               <label htmlFor="currentAddress" className={styles.formLabel}>Current Address:</label>
               <textarea
                 id="currentAddress"
                 name="currentAddress"
                 value={personalDetails.currentAddress}
-                onChange={handlePersonalDetailsChange}
+                onChange={(e) => handleInputChange(e, setPersonalDetails, personalDetails)}
                 required
                 className={styles.formTextarea}
               />
@@ -263,7 +186,7 @@ export default function StudentForm() {
                 id="photo"
                 name="photo"
                 value={personalDetails.photo}
-                onChange={handlePersonalDetailsChange}
+                onChange={(e) => handleInputChange(e, setPersonalDetails, personalDetails)}
                 placeholder="Enter photo URL or Base64 string"
                 className={styles.formInput}
               />
@@ -279,68 +202,21 @@ export default function StudentForm() {
           <>
             <h2>Degree Details</h2>
             {/* Degree Details Form Fields */}
+            {['degreeName', 'degreeNumber', 'degreeScan', 'issuer', 'verified'].map((field) => (
+              <div key={field}>
+                <label htmlFor={field} className={styles.formLabel}>{field.replace(/([A-Z])/g, ' $1').toUpperCase()}:</label>
+                <input
+                  type={field === 'degreeNumber' ? 'number' : 'text'}
+                  id={field}
+                  name={field}
+                  value={degreeDetails[field]}
+                  onChange={(e) => handleInputChange(e, setDegreeDetails, degreeDetails)}
+                  className={styles.formInput}
+                />
+              </div>
+            ))}
             <div>
-              <label htmlFor="degreeName" className={styles.formLabel}>Degree Name:</label>
-              <input
-                type="text"
-                id="degreeName"
-                name="degreeName"
-                value={degreeDetails.degreeName}
-                onChange={handleDegreeDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <label htmlFor="degreeNumber" className={styles.formLabel}>Degree Number:</label>
-              <input
-                type="text"
-                id="degreeNumber"
-                name="degreeNumber"
-                value={degreeDetails.degreeNumber}
-                onChange={handleDegreeDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <label htmlFor="degreeScan" className={styles.formLabel}>Degree Scan URL:</label>
-              <input
-                type="text"
-                id="degreeScan"
-                name="degreeScan"
-                value={degreeDetails.degreeScan}
-                onChange={handleDegreeDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <label htmlFor="issuer" className={styles.formLabel}>Issuer:</label>
-              <input
-                type="text"
-                id="issuer"
-                name="issuer"
-                value={degreeDetails.issuer}
-                onChange={handleDegreeDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <label htmlFor="verified" className={styles.formLabel}>Verified:</label>
-              <input
-                type="text"
-                id="verified"
-                name="verified"
-                value={degreeDetails.verified}
-                onChange={handleDegreeDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <button type="button" onClick={previousStep} className={styles.formButton}>Back</button>
+              <button type="button" onClick={previousStep} className={styles.formButton}>Previous</button>
               <button type="button" onClick={nextStep} className={styles.formButton}>Next</button>
             </div>
           </>
@@ -351,81 +227,28 @@ export default function StudentForm() {
           <>
             <h2>ID Card Details</h2>
             {/* ID Card Details Form Fields */}
+            {['idCardNumber', 'idCardScan', 'validity', 'issuer', 'verified'].map((field) => (
+              <div key={field}>
+                <label htmlFor={field} className={styles.formLabel}>{field.replace(/([A-Z])/g, ' $1').toUpperCase()}:</label>
+                <input
+                  type={field === 'idCardNumber' ? 'number' : 'text'}
+                  id={field}
+                  name={field}
+                  value={idCardDetails[field]}
+                  onChange={(e) => handleInputChange(e, setIdCardDetails, idCardDetails)}
+                  className={styles.formInput}
+                />
+              </div>
+            ))}
             <div>
-              <label htmlFor="idCardNumber" className={styles.formLabel}>ID Card Number:</label>
-              <input
-                type="text"
-                id="idCardNumber"
-                name="idCardNumber"
-                value={idCardDetails.idCardNumber}
-                onChange={handleIdCardDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <label htmlFor="idCardScan" className={styles.formLabel}>ID Card Scan URL:</label>
-              <input
-                type="text"
-                id="idCardScan"
-                name="idCardScan"
-                value={idCardDetails.idCardScan}
-                onChange={handleIdCardDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <label htmlFor="validity" className={styles.formLabel}>Validity:</label>
-              <input
-                type="text"
-                id="validity"
-                name="validity"
-                value={idCardDetails.validity}
-                onChange={handleIdCardDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <label htmlFor="issuer" className={styles.formLabel}>Issuer:</label>
-              <input
-                type="text"
-                id="issuer"
-                name="issuer"
-                value={idCardDetails.issuer}
-                onChange={handleIdCardDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <label htmlFor="verified" className={styles.formLabel}>Verified:</label>
-              <input
-                type="text"
-                id="verified"
-                name="verified"
-                value={idCardDetails.verified}
-                onChange={handleIdCardDetailsChange}
-                required
-                className={styles.formInput}
-              />
-            </div>
-            <div>
-              <button type="button" onClick={previousStep} className={styles.formButton}>Back</button>
+              <button type="button" onClick={previousStep} className={styles.formButton}>Previous</button>
               <button type="submit" className={styles.formButton}>Submit</button>
             </div>
           </>
         )}
       </form>
-
-      {/* Display the Unique Student ID */}
-      {studentID && (
-        <div className={styles.studentId}>
-          <h3>Your Unique Student ID:</h3>
-          <p>{studentID}</p>
-        </div>
-      )}
+      {/* Display student ID if available */}
+      {studentID && <p>Student ID: {studentID}</p>}
     </div>
   );
 }

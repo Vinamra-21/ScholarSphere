@@ -1,19 +1,20 @@
-/* src/StudentDetails.css */
+/* fetchstudent.module.css */
 
-
-.h1 {
-    color: #333;
-    font-size: 2em;
-    margin-bottom: 20px;
+.container {
+    max-width: 600px;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .input {
+    width: 100%;
     padding: 10px;
-    border: 1px solid black;
+    margin: 10px 0;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    margin-right: 10px;
-    font-size: 1em;
-    width: 300px;
     color: black;
 }
 
@@ -22,35 +23,27 @@
     border: none;
     border-radius: 4px;
     background-color: #007bff;
-    color: white;
-    font-size: 1em;
+    color: #fff;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
-.button:hover {
-    background-color: #0056b3;
-}
-
-.p {
-    font-size: 1.1em;
-    line-height: 1.6;
-    margin: 10px 0;
-}
-
-.strong {
-    color: #333;
-}
-
-.img {
-    max-width: 100px;
-    border-radius: 8px;
-    display: block;
-    margin-top: 10px;
+.button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
 }
 
 .error {
-    color: red;
-    font-weight: bold;
+    color: #ff4d4d;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.details {
     margin-top: 20px;
+}
+
+.details img {
+    max-width: 100px;
+    height: auto;
+    border-radius: 4px;
 }

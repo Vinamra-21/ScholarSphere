@@ -17,7 +17,7 @@ contract PersonalRecords {
 
     struct DegreeDetails {
         string degreeName;
-        string degreeNumber; // Added field
+        string degreeNumber;
         string issuer;
         string degreeScan;
         string verified;
@@ -25,21 +25,17 @@ contract PersonalRecords {
 
     struct IDCardDetails {
         string idCardScan;
-        string idCardNumber; // Added field
+        string idCardNumber;
         uint validity;
         string issuer;
         string verified;
     }
 
-    // Mapping from user address to their unique 16-digit ID
     mapping(address => string) private userIdMapping;
-    
-    // Mapping from 16-digit ID to user details
     mapping(string => PersonalDetails) private personalRecords;
     mapping(string => DegreeDetails) private degreeRecords;
     mapping(string => IDCardDetails) private idCardRecords;
 
-    // Counter to generate unique IDs
     uint64 private idCounter;
 
     event PersonalDetailsUpdated(
@@ -58,7 +54,7 @@ contract PersonalRecords {
     event DegreeDetailsUpdated(
         string indexed userId,
         string degreeName, 
-        string degreeNumber, // Added field
+        string degreeNumber,
         string issuer, 
         string degreeScan
     );
@@ -66,18 +62,16 @@ contract PersonalRecords {
     event IDCardDetailsUpdated(
         string indexed userId,
         string idCardScan, 
-        string idCardNumber, // Added field
+        string idCardNumber,
         uint validity, 
         string issuer
     );
 
-    // Function to generate a unique 16-digit ID
-    function generateUniqueId() private returns (string memory) {
+    function generateUniqueId() internal returns (string memory) {
         idCounter++;
         return uintToStr(idCounter);
     }
 
-    // Function to convert uint to string
     function uintToStr(uint64 _i) internal pure returns (string memory) {
         if (_i == 0) {
             return "0000000000000000";
@@ -110,7 +104,6 @@ contract PersonalRecords {
         string memory _currentAddress,
         string memory _photo
     ) public returns (string memory) {
-        // Generate or retrieve the unique ID for the user
         string memory userId = userIdMapping[msg.sender];
         if (bytes(userId).length == 0) {
             userId = generateUniqueId();
@@ -150,7 +143,7 @@ contract PersonalRecords {
 
     function setDegreeDetails(
         string memory _degreeName,
-        string memory _degreeNumber, // Added parameter
+        string memory _degreeNumber,
         string memory _issuer,
         string memory _degreeScan,
         string memory _verified
@@ -160,7 +153,7 @@ contract PersonalRecords {
 
         degreeRecords[userId] = DegreeDetails(
             _degreeName, 
-            _degreeNumber, // Set the new field
+            _degreeNumber,
             _issuer, 
             _degreeScan, 
             _verified
@@ -168,7 +161,7 @@ contract PersonalRecords {
         emit DegreeDetailsUpdated(
             userId,
             _degreeName, 
-            _degreeNumber, // Include in the event
+            _degreeNumber,
             _issuer, 
             _degreeScan
         );
@@ -180,7 +173,7 @@ contract PersonalRecords {
 
     function setIDCardDetails(
         string memory _idCardScan,
-        string memory _idCardNumber, // Added parameter
+        string memory _idCardNumber,
         uint _validity,
         string memory _issuer,
         string memory _verified
@@ -190,7 +183,7 @@ contract PersonalRecords {
 
         idCardRecords[userId] = IDCardDetails(
             _idCardScan, 
-            _idCardNumber, // Set the new field
+            _idCardNumber,
             _validity, 
             _issuer, 
             _verified
@@ -198,7 +191,7 @@ contract PersonalRecords {
         emit IDCardDetailsUpdated(
             userId,
             _idCardScan, 
-            _idCardNumber, // Include in the event
+            _idCardNumber,
             _validity, 
             _issuer
         );
