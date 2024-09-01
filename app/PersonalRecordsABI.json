@@ -1,427 +1,439 @@
 [
 	{
-	  "anonymous": false,
-	  "inputs": [
-		{
-		  "indexed": true,
-		  "internalType": "string",
-		  "name": "userId",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "degreeName",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "degreeNumber",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "issuer",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "degreeScan",
-		  "type": "string"
-		}
-	  ],
-	  "name": "DegreeDetailsUpdated",
-	  "type": "event"
-	},
-	{
-	  "anonymous": false,
-	  "inputs": [
-		{
-		  "indexed": true,
-		  "internalType": "string",
-		  "name": "userId",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "idCardScan",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "idCardNumber",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "uint256",
-		  "name": "validity",
-		  "type": "uint256"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "issuer",
-		  "type": "string"
-		}
-	  ],
-	  "name": "IDCardDetailsUpdated",
-	  "type": "event"
-	},
-	{
-	  "anonymous": false,
-	  "inputs": [
-		{
-		  "indexed": true,
-		  "internalType": "string",
-		  "name": "userId",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "name",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "uint256",
-		  "name": "age",
-		  "type": "uint256"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "aadharNumber",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "fatherName",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "motherName",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string[5]",
-		  "name": "qualification",
-		  "type": "string[5]"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "currentPosition",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "currentAddress",
-		  "type": "string"
-		},
-		{
-		  "indexed": false,
-		  "internalType": "string",
-		  "name": "photo",
-		  "type": "string"
-		}
-	  ],
-	  "name": "PersonalDetailsUpdated",
-	  "type": "event"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "string",
-		  "name": "_degreeName",
-		  "type": "string"
-		},
-		{
-		  "internalType": "string",
-		  "name": "_degreeNumber",
-		  "type": "string"
-		},
-		{
-		  "internalType": "string",
-		  "name": "_issuer",
-		  "type": "string"
-		},
-		{
-		  "internalType": "string",
-		  "name": "_degreeScan",
-		  "type": "string"
-		},
-		{
-		  "internalType": "string",
-		  "name": "_verified",
-		  "type": "string"
-		}
-	  ],
-	  "name": "setDegreeDetails",
-	  "outputs": [],
-	  "stateMutability": "nonpayable",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "string",
-		  "name": "_idCardScan",
-		  "type": "string"
-		},
-		{
-		  "internalType": "string",
-		  "name": "_idCardNumber",
-		  "type": "string"
-		},
-		{
-		  "internalType": "uint256",
-		  "name": "_validity",
-		  "type": "uint256"
-		},
-		{
-		  "internalType": "string",
-		  "name": "_issuer",
-		  "type": "string"
-		},
-		{
-		  "internalType": "string",
-		  "name": "_verified",
-		  "type": "string"
-		}
-	  ],
-	  "name": "setIDCardDetails",
-	  "outputs": [],
-	  "stateMutability": "nonpayable",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "string",
-		  "name": "_name",
-		  "type": "string"
-		},
-		{
-		  "internalType": "uint256",
-		  "name": "_age",
-		  "type": "uint256"
-		},
-		{
-		  "internalType": "string",
-		  "name": "_aadharNumber",
-		  "type": "string"
-		},
-		{
-		  "internalType": "string",
-		  "name": "_fatherName",
-		  "type": "string"
-		},
-		{
-		  "internalType": "string",
-		  "name": "_motherName",
-		  "type": "string"
-		},
-		{
-		  "internalType": "string[5]",
-		  "name": "_qualification",
-		  "type": "string[5]"
-		},
-		{
-		  "internalType": "string",
-		  "name": "_currentPosition",
-		  "type": "string"
-		},
-		{
-		  "internalType": "string",
-		  "name": "_currentAddress",
-		  "type": "string"
-		},
-		{
-		  "internalType": "string",
-		  "name": "_photo",
-		  "type": "string"
-		}
-	  ],
-	  "name": "setPersonalDetails",
-	  "outputs": [
-		{
-		  "internalType": "string",
-		  "name": "",
-		  "type": "string"
-		}
-	  ],
-	  "stateMutability": "nonpayable",
-	  "type": "function"
-	},
-	{
-	  "inputs": [
-		{
-		  "internalType": "string",
-		  "name": "_userId",
-		  "type": "string"
-		}
-	  ],
-	  "name": "getDegreeDetails",
-	  "outputs": [
-		{
-		  "components": [
+		"anonymous": false,
+		"inputs": [
 			{
-			  "internalType": "string",
-			  "name": "degreeName",
-			  "type": "string"
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "userId",
+				"type": "bytes32"
 			},
 			{
-			  "internalType": "string",
-			  "name": "degreeNumber",
-			  "type": "string"
+				"indexed": false,
+				"internalType": "string",
+				"name": "degreeName",
+				"type": "string"
 			},
 			{
-			  "internalType": "string",
-			  "name": "issuer",
-			  "type": "string"
+				"indexed": false,
+				"internalType": "string",
+				"name": "degreeNumber",
+				"type": "string"
 			},
 			{
-			  "internalType": "string",
-			  "name": "degreeScan",
-			  "type": "string"
+				"indexed": false,
+				"internalType": "string",
+				"name": "issuer",
+				"type": "string"
 			},
 			{
-			  "internalType": "string",
-			  "name": "verified",
-			  "type": "string"
+				"indexed": false,
+				"internalType": "string",
+				"name": "degreeScan",
+				"type": "string"
 			}
-		  ],
-		  "internalType": "struct PersonalRecords.DegreeDetails",
-		  "name": "",
-		  "type": "tuple"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
+		],
+		"name": "DegreeDetailsUpdated",
+		"type": "event"
 	},
 	{
-	  "inputs": [
-		{
-		  "internalType": "string",
-		  "name": "_userId",
-		  "type": "string"
-		}
-	  ],
-	  "name": "getIDCardDetails",
-	  "outputs": [
-		{
-		  "components": [
+		"anonymous": false,
+		"inputs": [
 			{
-			  "internalType": "string",
-			  "name": "idCardScan",
-			  "type": "string"
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "userId",
+				"type": "bytes32"
 			},
 			{
-			  "internalType": "string",
-			  "name": "idCardNumber",
-			  "type": "string"
+				"indexed": false,
+				"internalType": "string",
+				"name": "idCardScan",
+				"type": "string"
 			},
 			{
-			  "internalType": "uint256",
-			  "name": "validity",
-			  "type": "uint256"
+				"indexed": false,
+				"internalType": "string",
+				"name": "idCardNumber",
+				"type": "string"
 			},
 			{
-			  "internalType": "string",
-			  "name": "issuer",
-			  "type": "string"
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "validity",
+				"type": "uint256"
 			},
 			{
-			  "internalType": "string",
-			  "name": "verified",
-			  "type": "string"
+				"indexed": false,
+				"internalType": "string",
+				"name": "issuer",
+				"type": "string"
 			}
-		  ],
-		  "internalType": "struct PersonalRecords.IDCardDetails",
-		  "name": "",
-		  "type": "tuple"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
+		],
+		"name": "IDCardDetailsUpdated",
+		"type": "event"
 	},
 	{
-	  "inputs": [
-		{
-		  "internalType": "string",
-		  "name": "_userId",
-		  "type": "string"
-		}
-	  ],
-	  "name": "getPersonalDetails",
-	  "outputs": [
-		{
-		  "components": [
+		"anonymous": false,
+		"inputs": [
 			{
-			  "internalType": "string",
-			  "name": "name",
-			  "type": "string"
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "userId",
+				"type": "bytes32"
 			},
 			{
-			  "internalType": "uint256",
-			  "name": "age",
-			  "type": "uint256"
+				"indexed": false,
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
 			},
 			{
-			  "internalType": "string",
-			  "name": "aadharNumber",
-			  "type": "string"
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "age",
+				"type": "uint256"
 			},
 			{
-			  "internalType": "string",
-			  "name": "fatherName",
-			  "type": "string"
+				"indexed": false,
+				"internalType": "string",
+				"name": "aadharNumber",
+				"type": "string"
 			},
 			{
-			  "internalType": "string",
-			  "name": "motherName",
-			  "type": "string"
+				"indexed": false,
+				"internalType": "string",
+				"name": "fatherName",
+				"type": "string"
 			},
 			{
-			  "internalType": "string[5]",
-			  "name": "qualification",
-			  "type": "string[5]"
+				"indexed": false,
+				"internalType": "string",
+				"name": "motherName",
+				"type": "string"
 			},
 			{
-			  "internalType": "string",
-			  "name": "currentPosition",
-			  "type": "string"
+				"indexed": false,
+				"internalType": "string[5]",
+				"name": "qualification",
+				"type": "string[5]"
 			},
 			{
-			  "internalType": "string",
-			  "name": "currentAddress",
-			  "type": "string"
+				"indexed": false,
+				"internalType": "string",
+				"name": "currentPosition",
+				"type": "string"
 			},
 			{
-			  "internalType": "string",
-			  "name": "photo",
-			  "type": "string"
+				"indexed": false,
+				"internalType": "string",
+				"name": "currentAddress",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "photo",
+				"type": "string"
 			}
-		  ],
-		  "internalType": "struct PersonalRecords.PersonalDetails",
-		  "name": "",
-		  "type": "tuple"
-		}
-	  ],
-	  "stateMutability": "view",
-	  "type": "function"
+		],
+		"name": "PersonalDetailsUpdated",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_degreeName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_degreeNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_issuer",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_degreeScan",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_verified",
+				"type": "string"
+			}
+		],
+		"name": "setDegreeDetails",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_idCardScan",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_idCardNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_validity",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_issuer",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_verified",
+				"type": "string"
+			}
+		],
+		"name": "setIDCardDetails",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_age",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_aadharNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_fatherName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_motherName",
+				"type": "string"
+			},
+			{
+				"internalType": "string[5]",
+				"name": "_qualification",
+				"type": "string[5]"
+			},
+			{
+				"internalType": "string",
+				"name": "_currentPosition",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_currentAddress",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_photo",
+				"type": "string"
+			}
+		],
+		"name": "setPersonalDetails",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "_userId",
+				"type": "bytes32"
+			}
+		],
+		"name": "getDegreeDetails",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "degreeName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "degreeNumber",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "issuer",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "degreeScan",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "verified",
+						"type": "string"
+					}
+				],
+				"internalType": "struct PersonalRecords.DegreeDetails",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "_userId",
+				"type": "bytes32"
+			}
+		],
+		"name": "getIDCardDetails",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "idCardScan",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "idCardNumber",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "validity",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "issuer",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "verified",
+						"type": "string"
+					}
+				],
+				"internalType": "struct PersonalRecords.IDCardDetails",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "_userId",
+				"type": "bytes32"
+			}
+		],
+		"name": "getPersonalDetails",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "age",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "aadharNumber",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "fatherName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "motherName",
+						"type": "string"
+					},
+					{
+						"internalType": "string[5]",
+						"name": "qualification",
+						"type": "string[5]"
+					},
+					{
+						"internalType": "string",
+						"name": "currentPosition",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "currentAddress",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "photo",
+						"type": "string"
+					}
+				],
+				"internalType": "struct PersonalRecords.PersonalDetails",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getUserId",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
 	}
-  ]
-  
+]

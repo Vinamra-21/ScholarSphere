@@ -8,7 +8,7 @@ import contractABI from '../PersonalRecordsABI.json'; // Adjust path to your ABI
 const getWeb3AndContract = async () => {
   if (window.ethereum) {
     const web3 = new Web3(window.ethereum);
-    const contractAddress = '0xaE036c65C649172b43ef7156b009c6221B596B8b'; // Replace with your contract's address
+    const contractAddress = '0x48Ae67E4Db57874AD27CFA1e041484D73C101247'; // Replace with your contract's address
     const contract = new web3.eth.Contract(contractABI, contractAddress);
     return { web3, contract };
   } else {
@@ -50,6 +50,7 @@ export default function StudentForm() {
   const [contract, setContract] = useState(null);
   const [account, setAccount] = useState('');
   const [studentID, setStudentID] = useState('');
+  const [blockHash, setBlockHash] = useState(''); // New state for block hash
 
   useEffect(() => {
     const init = async () => {
@@ -106,7 +107,7 @@ export default function StudentForm() {
           degreeDetails.verified,
           idCardDetails.idCardNumber,
           idCardDetails.idCardScan,
-          idCardDetails.validity,
+          parseInt(idCardDetails.validity),
           idCardDetails.issuer,
           idCardDetails.verified
         ).encodeABI()
@@ -115,7 +116,10 @@ export default function StudentForm() {
       const receipt = await web3.eth.sendTransaction(tx);
 
       if (receipt.status) {
-        // Fetch user ID from the contract
+        // Retrieve block hash
+        const block = await web3.eth.getBlock(receipt.blockNumber);
+        setBlockHash(block.hash); // Set the block hash to state
+        // Optionally, fetch user ID from the contract
         const userId = await contract.methods.getUserId().call();
         setStudentID(userId); // Set the user ID to state
       } else {
@@ -247,8 +251,9 @@ export default function StudentForm() {
           </>
         )}
       </form>
-      {/* Display student ID if available */}
+      {/* Display student ID and block hash if available */}
       {studentID && <p>Student ID: {studentID}</p>}
+      {blockHash && <p>Block Hash: {blockHash}</p>}
     </div>
   );
 }

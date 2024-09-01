@@ -31,15 +31,13 @@ contract PersonalRecords {
         string verified;
     }
 
-    mapping(address => string) private userIdMapping;
-    mapping(string => PersonalDetails) private personalRecords;
-    mapping(string => DegreeDetails) private degreeRecords;
-    mapping(string => IDCardDetails) private idCardRecords;
-
-    uint64 private idCounter;
+    mapping(address => bytes32) private userIdMapping;
+    mapping(bytes32 => PersonalDetails) private personalRecords;
+    mapping(bytes32 => DegreeDetails) private degreeRecords;
+    mapping(bytes32 => IDCardDetails) private idCardRecords;
 
     event PersonalDetailsUpdated(
-        string indexed userId,
+        bytes32 indexed userId,
         string name, 
         uint age, 
         string aadharNumber,
@@ -52,7 +50,7 @@ contract PersonalRecords {
     );
     
     event DegreeDetailsUpdated(
-        string indexed userId,
+        bytes32 indexed userId,
         string degreeName, 
         string degreeNumber,
         string issuer, 
@@ -60,37 +58,15 @@ contract PersonalRecords {
     );
     
     event IDCardDetailsUpdated(
-        string indexed userId,
+        bytes32 indexed userId,
         string idCardScan, 
         string idCardNumber,
         uint validity, 
         string issuer
     );
 
-    function generateUniqueId() internal returns (string memory) {
-        idCounter++;
-        return uintToStr(idCounter);
-    }
-
-    function uintToStr(uint64 _i) internal pure returns (string memory) {
-        if (_i == 0) {
-            return "0000000000000000";
-        }
-        uint64 j = _i;
-        uint64 len;
-        while (j != 0) {
-            len++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(16);
-        for (uint64 k = 0; k < 16 - len; k++) {
-            bstr[k] = "0";
-        }
-        while (_i != 0) {
-            bstr[--len + 16 - len] = bytes1(uint8(48 + _i % 10));
-            _i /= 10;
-        }
-        return string(bstr);
+    function getBlockHash() internal view returns (bytes32) {
+        return blockhash(block.number - 1);
     }
 
     function setPersonalDetails(
@@ -103,12 +79,9 @@ contract PersonalRecords {
         string memory _currentPosition,
         string memory _currentAddress,
         string memory _photo
-    ) public returns (string memory) {
-        string memory userId = userIdMapping[msg.sender];
-        if (bytes(userId).length == 0) {
-            userId = generateUniqueId();
-            userIdMapping[msg.sender] = userId;
-        }
+    ) public returns (bytes32) {
+        bytes32 userId = getBlockHash();
+        userIdMapping[msg.sender] = userId;
 
         personalRecords[userId] = PersonalDetails(
             _name, 
@@ -137,7 +110,7 @@ contract PersonalRecords {
         return userId;
     }
 
-    function getPersonalDetails(string memory _userId) public view returns (PersonalDetails memory) {
+    function getPersonalDetails(bytes32 _userId) public view returns (PersonalDetails memory) {
         return personalRecords[_userId];
     }
 
@@ -148,8 +121,8 @@ contract PersonalRecords {
         string memory _degreeScan,
         string memory _verified
     ) public {
-        string memory userId = userIdMapping[msg.sender];
-        require(bytes(userId).length != 0, "User ID does not exist");
+        bytes32 userId = userIdMapping[msg.sender];
+        require(userId != bytes32(0), "User ID does not exist");
 
         degreeRecords[userId] = DegreeDetails(
             _degreeName, 
@@ -167,7 +140,7 @@ contract PersonalRecords {
         );
     }
 
-    function getDegreeDetails(string memory _userId) public view returns (DegreeDetails memory) {
+    function getDegreeDetails(bytes32 _userId) public view returns (DegreeDetails memory) {
         return degreeRecords[_userId];
     }
 
@@ -178,8 +151,8 @@ contract PersonalRecords {
         string memory _issuer,
         string memory _verified
     ) public {
-        string memory userId = userIdMapping[msg.sender];
-        require(bytes(userId).length != 0, "User ID does not exist");
+        bytes32 userId = userIdMapping[msg.sender];
+        require(userId != bytes32(0), "User ID does not exist");
 
         idCardRecords[userId] = IDCardDetails(
             _idCardScan, 
@@ -197,11 +170,11 @@ contract PersonalRecords {
         );
     }
 
-    function getIDCardDetails(string memory _userId) public view returns (IDCardDetails memory) {
+    function getIDCardDetails(bytes32 _userId) public view returns (IDCardDetails memory) {
         return idCardRecords[_userId];
     }
 
-    function getUserId() public view returns (string memory) {
+    function getUserId() public view returns (bytes32) {
         return userIdMapping[msg.sender];
     }
 }
